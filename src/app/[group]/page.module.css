@@ -1,0 +1,89 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.hero {
+  width: 100%;
+  padding: 2.5rem 0.75rem;
+  text-align: center;
+  background: linear-gradient(to bottom right, var(--wc-purple), var(--wc-dark), var(--wc-turquoise));
+}
+
+@media (min-width: 640px) {
+  .hero {
+    padding: 4rem 1.5rem;
+  }
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.turquoise {
+  color: var(--wc-turquoise);
+}
+
+.coral {
+  color: var(--wc-coral);
+}
+
+.groupName {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ctaButton {
+  display: inline-block;
+  margin-top: 2rem;
+  background: var(--wc-coral);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+
+.ctaButton:hover {
+  background: rgba(255, 107, 107, 0.8);
+}
+
+.main {
+  width: 100%;
+  max-width: 56rem;
+  padding: 2rem 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .main {
+    padding: 3rem 1.5rem;
+  }
+}
+
+.resultsHeading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--wc-turquoise);
+}
+
+.teamsHeading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--wc-turquoise);
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 3.75rem;
+  }
+}

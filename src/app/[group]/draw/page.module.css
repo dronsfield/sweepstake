@@ -1,0 +1,144 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  min-height: 100vh;
+}
+
+@media (min-width: 640px) {
+  .container {
+    justify-content: center;
+    padding: 4rem 1.5rem;
+  }
+}
+
+.inner {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.backLink {
+  color: var(--wc-turquoise);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  display: inline-block;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: rgba(0, 180, 216, 0.8);
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.turquoise {
+  color: var(--wc-turquoise);
+}
+
+.coral {
+  color: var(--wc-coral);
+}
+
+.form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.input:focus {
+  border-color: var(--wc-turquoise);
+}
+
+.submitButton {
+  width: 100%;
+  background: var(--wc-coral);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submitButton:hover {
+  background: rgba(255, 107, 107, 0.8);
+}
+
+.loading {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.spinner {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--wc-turquoise);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.error {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(255, 107, 107, 0.2);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  border-radius: 0.5rem;
+}
+
+.errorMessage {
+  color: var(--wc-coral);
+  font-weight: 500;
+}
+
+.retryButton {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.retryButton:hover {
+  color: #fff;
+}

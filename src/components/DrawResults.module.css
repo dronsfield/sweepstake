@@ -1,0 +1,63 @@
+.empty {
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.table th {
+  padding: 0.4rem 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table td {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 640px) {
+  .table {
+    font-size: 1rem;
+  }
+
+  .table th {
+    padding: 0.6rem 1rem;
+  }
+
+  .table td {
+    padding: 0.5rem 1rem;
+  }
+}
+
+.table tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.index {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.name {
+  font-weight: 600;
+}
+
+.waitingRow {
+  opacity: 0.4;
+}
+
+.waiting {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.4);
+}

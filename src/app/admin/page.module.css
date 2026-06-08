@@ -1,0 +1,179 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  padding: 4rem 1.5rem;
+  min-height: 100vh;
+}
+
+.inner {
+  width: 100%;
+  max-width: 32rem;
+}
+
+.backLink {
+  color: var(--wc-turquoise);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  display: inline-block;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: rgba(0, 180, 216, 0.8);
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--wc-coral);
+  margin-bottom: 2rem;
+}
+
+.empty {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.groupCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.groupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.groupName {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.groupMeta {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.viewLink {
+  color: var(--wc-turquoise);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.viewLink:hover {
+  color: rgba(0, 180, 216, 0.8);
+}
+
+.dangerButton {
+  background: var(--wc-coral);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dangerButton:hover {
+  background: rgba(255, 107, 107, 0.8);
+}
+
+.confirmBox {
+  padding: 1rem;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 0.5rem;
+}
+
+.confirmText {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.cancelButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancelButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.status {
+  margin-top: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+}
+
+.pinForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 12rem;
+}
+
+.pinLabel {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pinInput {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 1.5rem;
+  letter-spacing: 0.5em;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.pinInput:focus {
+  border-color: var(--wc-turquoise);
+}
+
+.pinError {
+  color: var(--wc-coral);
+  font-size: 0.875rem;
+}
+
+.pinButton {
+  background: var(--wc-turquoise);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pinButton:hover {
+  background: rgba(0, 180, 216, 0.8);
+}
