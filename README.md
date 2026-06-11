@@ -1,12 +1,12 @@
 # World Cup 2026 Sweepstake
 
-A Next.js app for running a World Cup 2026 sweepstake draw among friends. Each participant draws two random teams — one from a top-tier pot and one from a bottom-tier pot based on FIFA rankings.
+A Next.js app for running a World Cup 2026 sweepstake draw among friends. Each participant draws two random teams — one from a top-tier pot and one from a second-tier pot based on FIFA rankings.
 
 ## How it works
 
 Given N participants in a group:
 - **Top Tier Pot**: the N highest FIFA-ranked WC2026 nations
-- **Bottom Tier Pot**: the next N highest FIFA-ranked nations
+- **Second Tier Pot**: the next N highest FIFA-ranked nations
 - Each participant selects their name from a whitelist and draws one team from each pot
 - Teams are removed from the pool once drawn
 

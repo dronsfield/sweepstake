@@ -64,7 +64,7 @@ export function AllTeams({
           <tr className={styles.dividerRow}>
             <td colSpan={2}>
               <span className={`${styles.dividerLabel} ${styles.potBottom}`}>
-                Bottom Tier ({bottomTier.length} teams)
+                Second Tier ({bottomTier.length} teams)
               </span>
             </td>
           </tr>

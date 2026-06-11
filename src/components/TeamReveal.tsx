@@ -57,7 +57,7 @@ export function TeamReveal({
         <>
           {step === "spin-bottom" && (
             <div className={styles.wheelSection}>
-              <p className={`${styles.tierLabel} ${styles.tierLabelBottom}`}>Bottom Tier</p>
+              <p className={`${styles.tierLabel} ${styles.tierLabelBottom}`}>Second Tier</p>
               <SpinWheel
                 teams={bottomTeams}
                 winner={participant.bottomTierTeam}
@@ -82,7 +82,7 @@ export function TeamReveal({
           {step === "done" && (
             <div className={styles.cards}>
               <div>
-                <p className={`${styles.cardLabel} ${styles.cardLabelBottom}`}>Bottom Tier</p>
+                <p className={`${styles.cardLabel} ${styles.cardLabelBottom}`}>Second Tier</p>
                 <div className={`${styles.card} ${styles.cardBottomTier}`}>
                   <TeamBadge team={participant.bottomTierTeam} />
                 </div>
@@ -99,7 +99,7 @@ export function TeamReveal({
       ) : (
         <div className={styles.cards}>
           <div>
-            <p className={`${styles.cardLabel} ${styles.cardLabelBottom}`}>Bottom Tier</p>
+            <p className={`${styles.cardLabel} ${styles.cardLabelBottom}`}>Second Tier</p>
             <div className={`${styles.card} ${styles.cardBottomTier}`}>
               <TeamBadge team={participant.bottomTierTeam} />
             </div>

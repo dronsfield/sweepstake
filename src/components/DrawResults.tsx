@@ -28,7 +28,7 @@ export function DrawResults({
           <tr>
             <th>Name</th>
             <th>Top Tier</th>
-            <th>Bottom Tier</th>
+            <th>Second Tier</th>
           </tr>
         </thead>
         <tbody>

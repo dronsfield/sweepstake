@@ -153,7 +153,7 @@ export default function TestAnimationPage() {
                 cursor: "pointer",
               }}
             >
-              {t === "top" ? "Top Tier" : "Bottom Tier"}
+              {t === "top" ? "Top Tier" : "Second Tier"}
             </button>
           ))}
           <div

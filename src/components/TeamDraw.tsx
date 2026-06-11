@@ -65,7 +65,7 @@ export function TeamDraw({
                 color: "var(--bottom-tier)",
               }}
             >
-              Bottom Tier
+              Second Tier
             </p>
             <FlagArena
               teams={bottomTierTeams}
@@ -143,7 +143,7 @@ export function TeamDraw({
                     marginBottom: "0.25rem",
                   }}
                 >
-                  Bottom Tier
+                  Second Tier
                 </p>
                 <TeamBadge team={participant.bottomTierTeam} />
               </div>
