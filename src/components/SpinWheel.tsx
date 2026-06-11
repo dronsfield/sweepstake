@@ -18,13 +18,8 @@ function loadFlagImage(code: string): Promise<HTMLImageElement> {
   });
 }
 
-// Segment colors that alternate
-const SEGMENT_COLORS = [
-  "rgba(0, 180, 216, 0.25)",
-  "rgba(140, 82, 255, 0.25)",
-  "rgba(255, 107, 107, 0.2)",
-  "rgba(245, 166, 35, 0.2)",
-];
+// Football pitch greens
+const SEGMENT_COLORS = ["#2e8b3a", "#256e2f"];
 
 // Custom easing: fast start, very slow crawl at the end.
 // Uses a high-power ease-out so the last ~30% of time covers only a few segments.
@@ -56,10 +51,14 @@ export function SpinWheel({
   teams: teamsProp,
   winner,
   onRevealComplete,
+  actionLabel,
+  tier = "top",
 }: {
   teams: Team[];
   winner: Team;
   onRevealComplete: () => void;
+  actionLabel?: string;
+  tier?: "top" | "bottom";
 }) {
   const [teams] = useState(() => buildSegments(teamsProp));
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -71,8 +70,13 @@ export function SpinWheel({
   onRevealCompleteRef.current = onRevealComplete;
   const [buttonState, setButtonState] = useState<"visible" | "fading" | "hidden">("visible");
   const [winnerRevealed, setWinnerRevealed] = useState(false);
+  const [showAction, setShowAction] = useState(false);
   const revealAlphaRef = useRef(0);
+  const revealTRef = useRef(0);
   const winnerImgRef = useRef<HTMLImageElement | null>(null);
+  const particlesRef = useRef<
+    { x: number; y: number; vx: number; vy: number; alpha: number; size: number; hue: number }[]
+  >([]);
 
   const segmentAngle = (Math.PI * 2) / teams.length;
 
@@ -125,13 +129,13 @@ export function SpinWheel({
           ctx.fillStyle = SEGMENT_COLORS[i % SEGMENT_COLORS.length];
           ctx.fill();
 
-          // Segment border
+          // Segment border — pitch markings
           ctx.beginPath();
           ctx.moveTo(CENTER, CENTER);
           ctx.arc(CENTER, CENTER, WHEEL_RADIUS, startAngle, endAngle);
           ctx.closePath();
-          ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
-          ctx.lineWidth = 1;
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+          ctx.lineWidth = 2.5;
           ctx.stroke();
 
           // Flag image at outer edge, rotated to align with segment
@@ -155,71 +159,115 @@ export function SpinWheel({
           }
         }
 
-        // Outer ring
+        // Outer ring — thick pitch marking
         ctx.beginPath();
         ctx.arc(CENTER, CENTER, WHEEL_RADIUS, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.lineWidth = 4;
         ctx.stroke();
 
         // Center hub
         ctx.beginPath();
         ctx.arc(CENTER, CENTER, 20, 0, Math.PI * 2);
-        ctx.fillStyle = "#1a1a2e";
+        ctx.fillStyle = "#1e5c26";
         ctx.fill();
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.lineWidth = 3;
         ctx.stroke();
 
-        // Pointer (triangle at top, pointing down into wheel)
-        ctx.beginPath();
-        ctx.moveTo(CENTER, CENTER - WHEEL_RADIUS + 6);
-        ctx.lineTo(CENTER - POINTER_SIZE * 0.6, CENTER - WHEEL_RADIUS - POINTER_SIZE);
-        ctx.lineTo(CENTER + POINTER_SIZE * 0.6, CENTER - WHEEL_RADIUS - POINTER_SIZE);
-        ctx.closePath();
-        ctx.fillStyle = "var(--wc-coral, #ff6b6b)";
-        ctx.fill();
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        // Pointer (gold World Cup triangle) — fade out during reveal
+        const pointerAlpha = 1 - revealAlphaRef.current;
+        if (pointerAlpha > 0.01) {
+          ctx.globalAlpha = pointerAlpha;
+          ctx.beginPath();
+          ctx.moveTo(CENTER, CENTER - WHEEL_RADIUS + 6);
+          ctx.lineTo(CENTER - POINTER_SIZE * 0.6, CENTER - WHEEL_RADIUS - POINTER_SIZE);
+          ctx.lineTo(CENTER + POINTER_SIZE * 0.6, CENTER - WHEEL_RADIUS - POINTER_SIZE);
+          ctx.closePath();
+          ctx.fillStyle = "#d4a844";
+          ctx.fill();
+          ctx.strokeStyle = "#f5c842";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
 
         // Winner reveal overlay
         if (revealAlphaRef.current > 0) {
-          ctx.globalAlpha = revealAlphaRef.current;
+          revealTRef.current += 1 / 60;
+          const rt = revealTRef.current;
+          const alpha = revealAlphaRef.current;
+
+          ctx.globalAlpha = alpha;
 
           // Darken background
           ctx.beginPath();
           ctx.arc(CENTER, CENTER, WHEEL_RADIUS + 4, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(10, 10, 30, 0.85)";
+          ctx.fillStyle = "rgba(10, 10, 30, 0.88)";
           ctx.fill();
 
-          // Winner flag
+          // Flag — bouncy scale entrance
+          const revealY = CENTER - 45;
           const wImg = winnerImgRef.current;
           if (wImg) {
             const size = 80;
+            const scaleT = Math.min(rt / 0.6, 1);
+            const scale =
+              scaleT < 1
+                ? 1 - Math.pow(1 - scaleT, 3) * Math.cos(scaleT * Math.PI * 2.5) * (1 - scaleT)
+                : 1;
+            ctx.save();
+            ctx.translate(CENTER, revealY);
+            ctx.scale(scale, scale);
             ctx.drawImage(
               wImg,
-              CENTER - size / 2,
-              CENTER - size / 2 - 20,
+              -size / 2,
+              -size * 0.75 / 2,
               size,
               size * 0.75
             );
+            ctx.restore();
           }
 
-          // Winner name
+          // Winner name — slides up and fades in
+          const nameT = Math.max(0, Math.min((rt - 0.3) / 0.5, 1));
+          const nameEase = 1 - Math.pow(1 - nameT, 3);
+          ctx.globalAlpha = alpha * nameEase;
           ctx.fillStyle = "#ffffff";
           ctx.font = "bold 24px sans-serif";
           ctx.textAlign = "center";
-          ctx.fillText(winner.name, CENTER, CENTER + 30);
+          ctx.fillText(winner.name, CENTER, revealY + 55 + (1 - nameEase) * 15);
 
-          // Ranking
+          // Ranking — slides up after name
+          const rankT = Math.max(0, Math.min((rt - 0.6) / 0.5, 1));
+          const rankEase = 1 - Math.pow(1 - rankT, 3);
+          ctx.globalAlpha = alpha * rankEase;
           ctx.fillStyle = "rgba(255,255,255,0.5)";
           ctx.font = "14px sans-serif";
           ctx.fillText(
             `FIFA Ranking: #${winner.fifaRanking}`,
             CENTER,
-            CENTER + 54
+            revealY + 79 + (1 - rankEase) * 10
           );
+
+
+
+          // Confetti particles
+          ctx.globalAlpha = 1;
+          for (const p of particlesRef.current) {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.12;
+            p.vx *= 0.99;
+            p.alpha = Math.max(0, p.alpha - 0.008);
+            if (p.alpha > 0) {
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = `hsl(${p.hue}, 85%, 55%)`;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
 
           ctx.globalAlpha = 1;
         }
@@ -250,8 +298,11 @@ export function SpinWheel({
     // to land under the pointer we need:
     //   finalAngle + winnerIndex * segmentAngle - PI/2 + segmentAngle/2 = -PI/2  (mod 2PI)
     //   finalAngle = -(winnerIndex + 0.5) * segmentAngle  (mod 2PI)
-    // Land just inside the segment, near the trailing edge (looks like it barely made it)
-    const offset = 0.85 + Math.random() * 0.1;
+    // Top tier: land near the trailing edge (barely made it)
+    // Bottom tier: land 50-70% through (mid-segment, less dramatic)
+    const offset = tier === "bottom"
+      ? 0.5 + Math.random() * 0.2
+      : 0.85 + Math.random() * 0.1;
     const targetAngle = -((winnerIndex + offset) * segmentAngle);
     // Normalize current angle to [0, 2PI)
     const currentMod =
@@ -279,24 +330,46 @@ export function SpinWheel({
       if (t < 1) {
         requestAnimationFrame(animate);
       } else {
-        // Landed — pause then reveal
+        // Landed — brief pause then reveal
         setTimeout(() => {
           setWinnerRevealed(true);
+          revealTRef.current = 0;
+
+          // Spawn confetti burst
+          const confetti = [];
+          const hues = [40, 43, 46, 50];
+          for (let i = 0; i < 50; i++) {
+            const angle = (i / 50) * Math.PI * 2 + Math.random() * 0.4;
+            const speed = 2.5 + Math.random() * 4;
+            confetti.push({
+              x: CENTER,
+              y: CENTER,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed - 3,
+              alpha: 1,
+              size: 2 + Math.random() * 4,
+              hue: hues[Math.floor(Math.random() * hues.length)],
+            });
+          }
+          particlesRef.current = confetti;
+
           function fadeIn() {
-            revealAlphaRef.current = Math.min(1, revealAlphaRef.current + 0.04);
+            revealAlphaRef.current = Math.min(1, revealAlphaRef.current + 0.035);
             if (revealAlphaRef.current < 1) {
               requestAnimationFrame(fadeIn);
+            } else if (actionLabel) {
+              setTimeout(() => setShowAction(true), 800);
             } else {
-              setTimeout(() => onRevealCompleteRef.current(), 1500);
+              setTimeout(() => onRevealCompleteRef.current(), 2000);
             }
           }
           requestAnimationFrame(fadeIn);
-        }, 800);
+        }, 200);
       }
     }
 
     requestAnimationFrame(animate);
-  }, [winnerIndex, segmentAngle]);
+  }, [winnerIndex, segmentAngle, actionLabel, tier]);
 
   return (
     <div style={{ position: "relative" }}>
@@ -333,6 +406,28 @@ export function SpinWheel({
           }}
         >
           Spin!
+        </button>
+      )}
+      {showAction && actionLabel && (
+        <button
+          onClick={onRevealComplete}
+          style={{
+            position: "absolute",
+            top: "62%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "var(--wc-coral)",
+            color: "#fff",
+            fontWeight: 600,
+            padding: "0.5rem 1.5rem",
+            borderRadius: "0.5rem",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "0.875rem",
+            zIndex: 1,
+          }}
+        >
+          {actionLabel}
         </button>
       )}
     </div>

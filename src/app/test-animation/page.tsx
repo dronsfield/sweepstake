@@ -220,6 +220,8 @@ export default function TestAnimationPage() {
                 teams={teams}
                 winner={winner}
                 onRevealComplete={() => {}}
+                actionLabel={tier === "bottom" ? "Draw Top Tier" : "View Results"}
+                tier={tier}
               />
             )}
           </>
