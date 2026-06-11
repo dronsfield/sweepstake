@@ -50,8 +50,10 @@ export async function POST(
 
       const existing = allParticipants.find((p) => p.name === whitelistName);
       if (existing) {
+        const takenTopTeams = allParticipants.map((p) => p.topTierTeam.name);
+        const takenBottomTeams = allParticipants.map((p) => p.bottomTierTeam.name);
         return NextResponse.json(
-          { error: "You have already drawn your teams", participant: existing },
+          { error: "You have already drawn your teams", participant: existing, takenTopTeams, takenBottomTeams },
           { status: 409 }
         );
       }
@@ -85,9 +87,12 @@ export async function POST(
         drawnAt: new Date().toISOString(),
       };
 
+      const takenTopTeams = [...drawnTopTeams, participant.topTierTeam.name];
+      const takenBottomTeams = [...drawnBottomTeams, participant.bottomTierTeam.name];
+
       try {
         await collection.insertOne(participant as any);
-        return NextResponse.json({ participant });
+        return NextResponse.json({ participant, takenTopTeams, takenBottomTeams });
       } catch (err: any) {
         if (err?.code === 11000) {
           const keyPattern = err.keyPattern ?? {};

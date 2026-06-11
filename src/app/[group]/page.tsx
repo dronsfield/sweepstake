@@ -31,6 +31,7 @@ export default async function GroupPage({
   if (!group) notFound();
 
   const participants = await getParticipants(groupSlug);
+  const allDrawn = participants.length >= group.whitelist.length;
 
   return (
     <div className={styles.container}>
@@ -50,9 +51,11 @@ export default async function GroupPage({
           </h1>
           <p className={styles.groupName}>{group.displayName}</p>
         </div>
-        <Link href={`/${groupSlug}/draw`} className={styles.ctaButton}>
-          Enter the Draw
-        </Link>
+        {!allDrawn && (
+          <Link href={`/${groupSlug}/draw`} className={styles.ctaButton}>
+            Enter the Draw
+          </Link>
+        )}
       </header>
 
       <main className={styles.main}>

@@ -15,16 +15,27 @@ export function TeamReveal({
   isNew,
   groupSlug,
   participantCount,
+  takenTopTeams = [],
+  takenBottomTeams = [],
 }: {
   participant: Participant;
   isNew: boolean;
   groupSlug: string;
   participantCount: number;
+  takenTopTeams?: string[];
+  takenBottomTeams?: string[];
 }) {
   const [step, setStep] = useState<RevealStep>("spin-bottom");
 
-  const topTeams = getTopTierTeams(participantCount);
-  const bottomTeams = getBottomTierTeams(participantCount);
+  const takenTop = new Set(takenTopTeams);
+  const takenBottom = new Set(takenBottomTeams);
+  // Keep the winner + any teams not yet taken
+  const topTeams = getTopTierTeams(participantCount).filter(
+    (t) => t.name === participant.topTierTeam.name || !takenTop.has(t.name)
+  );
+  const bottomTeams = getBottomTierTeams(participantCount).filter(
+    (t) => t.name === participant.bottomTierTeam.name || !takenBottom.has(t.name)
+  );
 
   return (
     <div className={styles.container}>

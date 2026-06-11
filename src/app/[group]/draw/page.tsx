@@ -11,8 +11,8 @@ type DrawState =
   | { step: "enter" }
   | { step: "confirm" }
   | { step: "loading" }
-  | { step: "reveal"; participant: Participant }
-  | { step: "already-drawn"; participant: Participant }
+  | { step: "reveal"; participant: Participant; takenTopTeams: string[]; takenBottomTeams: string[] }
+  | { step: "already-drawn"; participant: Participant; takenTopTeams: string[]; takenBottomTeams: string[] }
   | { step: "error"; message: string }
   | { step: "fatal" };
 
@@ -95,11 +95,11 @@ export default function DrawPage() {
       const data = await res.json();
 
       if (res.status === 409) {
-        setState({ step: "already-drawn", participant: data.participant });
+        setState({ step: "already-drawn", participant: data.participant, takenTopTeams: data.takenTopTeams, takenBottomTeams: data.takenBottomTeams });
       } else if (!res.ok) {
         setState({ step: "error", message: data.error });
       } else {
-        setState({ step: "reveal", participant: data.participant });
+        setState({ step: "reveal", participant: data.participant, takenTopTeams: data.takenTopTeams, takenBottomTeams: data.takenBottomTeams });
       }
     } catch {
       setState({ step: "error", message: "Something went wrong. Try again." });
@@ -205,7 +205,7 @@ export default function DrawPage() {
         )}
 
         {state.step === "reveal" && (
-          <TeamReveal participant={state.participant} isNew groupSlug={group} participantCount={names.length} />
+          <TeamReveal participant={state.participant} isNew groupSlug={group} participantCount={names.length} takenTopTeams={state.takenTopTeams} takenBottomTeams={state.takenBottomTeams} />
         )}
 
         {state.step === "already-drawn" && (
@@ -214,6 +214,8 @@ export default function DrawPage() {
             isNew={false}
             groupSlug={group}
             participantCount={names.length}
+            takenTopTeams={state.takenTopTeams}
+            takenBottomTeams={state.takenBottomTeams}
           />
         )}
 

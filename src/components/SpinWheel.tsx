@@ -316,8 +316,10 @@ export function SpinWheel({
     const totalRotation = fullRotations + gap;
 
     const startAngle = angleRef.current;
-    const duration = 8000 + Math.random() * 2000;
+    const duration = 12000;
     const startTime = performance.now();
+
+    let revealStarted = false;
 
     function animate(now: number) {
       const elapsed = now - startTime;
@@ -326,44 +328,44 @@ export function SpinWheel({
 
       angleRef.current = startAngle + totalRotation * eased;
 
+      if (t >= 0.8 && !revealStarted) {
+        revealStarted = true;
+        setWinnerRevealed(true);
+        revealTRef.current = 0;
+
+        // Spawn confetti burst
+        const confetti = [];
+        const hues = [40, 43, 46, 50];
+        for (let i = 0; i < 50; i++) {
+          const angle = (i / 50) * Math.PI * 2 + Math.random() * 0.4;
+          const speed = 2.5 + Math.random() * 4;
+          confetti.push({
+            x: CENTER,
+            y: CENTER,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 3,
+            alpha: 1,
+            size: 2 + Math.random() * 4,
+            hue: hues[Math.floor(Math.random() * hues.length)],
+          });
+        }
+        particlesRef.current = confetti;
+
+        function fadeIn() {
+          revealAlphaRef.current = Math.min(1, revealAlphaRef.current + 0.035);
+          if (revealAlphaRef.current < 1) {
+            requestAnimationFrame(fadeIn);
+          } else if (actionLabel) {
+            setTimeout(() => setShowAction(true), 800);
+          } else {
+            setTimeout(() => onRevealCompleteRef.current(), 2000);
+          }
+        }
+        requestAnimationFrame(fadeIn);
+      }
+
       if (t < 1) {
         requestAnimationFrame(animate);
-      } else {
-        // Landed — brief pause then reveal
-        setTimeout(() => {
-          setWinnerRevealed(true);
-          revealTRef.current = 0;
-
-          // Spawn confetti burst
-          const confetti = [];
-          const hues = [40, 43, 46, 50];
-          for (let i = 0; i < 50; i++) {
-            const angle = (i / 50) * Math.PI * 2 + Math.random() * 0.4;
-            const speed = 2.5 + Math.random() * 4;
-            confetti.push({
-              x: CENTER,
-              y: CENTER,
-              vx: Math.cos(angle) * speed,
-              vy: Math.sin(angle) * speed - 3,
-              alpha: 1,
-              size: 2 + Math.random() * 4,
-              hue: hues[Math.floor(Math.random() * hues.length)],
-            });
-          }
-          particlesRef.current = confetti;
-
-          function fadeIn() {
-            revealAlphaRef.current = Math.min(1, revealAlphaRef.current + 0.035);
-            if (revealAlphaRef.current < 1) {
-              requestAnimationFrame(fadeIn);
-            } else if (actionLabel) {
-              setTimeout(() => setShowAction(true), 800);
-            } else {
-              setTimeout(() => onRevealCompleteRef.current(), 2000);
-            }
-          }
-          requestAnimationFrame(fadeIn);
-        }, 200);
       }
     }
 
@@ -371,7 +373,7 @@ export function SpinWheel({
   }, [winnerIndex, segmentAngle, actionLabel, tier]);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", maxWidth: CANVAS_SIZE, margin: "0 auto" }}>
       <canvas
         ref={canvasRef}
         width={CANVAS_SIZE * 2}
