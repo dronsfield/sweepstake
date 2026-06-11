@@ -12,7 +12,7 @@
     "flag-icons": "^7.5.0",
     "mongodb": "^7.2.0",
     "motion": "^12.40.0",
-    "next": "16.3.0-canary.36",
+    "next": "^16.2.9",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
@@ -21,7 +21,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.0-canary.36",
+    "eslint-config-next": "^16.2.9",
     "typescript": "^5"
   }
 }
