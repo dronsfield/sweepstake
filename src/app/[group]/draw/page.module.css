@@ -181,7 +181,7 @@
 }
 
 .confirmBody {
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-size: 0.9375rem;
 }
 
@@ -218,6 +218,12 @@
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loadingText {

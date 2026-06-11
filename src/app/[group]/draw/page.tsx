@@ -72,6 +72,7 @@ export default function DrawPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (state.step === "loading") return;
     const entry = names.find((n) => n.name.toLowerCase() === name.trim().toLowerCase());
     if (!entry) return;
     setName(entry.name);
@@ -83,6 +84,7 @@ export default function DrawPage() {
   }
 
   async function handleConfirm() {
+    if (state.step === "loading") return;
     setState({ step: "loading" });
 
     try {

@@ -97,12 +97,17 @@ export async function POST(
         if (err?.code === 11000) {
           const keyPattern = err.keyPattern ?? {};
           if (keyPattern.name) {
-            const existing = await collection.findOne({
-              group: groupSlug,
-              name: whitelistName,
-            });
+            const freshParticipants = await collection
+              .find({ group: groupSlug })
+              .toArray();
+            const existing = freshParticipants.find((p) => p.name === whitelistName);
             return NextResponse.json(
-              { error: "You have already drawn your teams", participant: existing },
+              {
+                error: "You have already drawn your teams",
+                participant: existing,
+                takenTopTeams: freshParticipants.map((p) => p.topTierTeam.name),
+                takenBottomTeams: freshParticipants.map((p) => p.bottomTierTeam.name),
+              },
               { status: 409 }
             );
           }

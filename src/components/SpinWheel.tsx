@@ -66,6 +66,7 @@ export function SpinWheel({
   const angleRef = useRef(0);
   const spinningRef = useRef(false);
   const rafRef = useRef(0);
+  const fadeRafRef = useRef(0);
   const onRevealCompleteRef = useRef(onRevealComplete);
   onRevealCompleteRef.current = onRevealComplete;
   const [buttonState, setButtonState] = useState<"visible" | "fading" | "hidden">("visible");
@@ -135,7 +136,7 @@ export function SpinWheel({
           ctx.moveTo(CENTER, CENTER);
           ctx.arc(CENTER, CENTER, WHEEL_RADIUS, startAngle, endAngle);
           ctx.closePath();
-          ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+          ctx.strokeStyle = "#e8f0e8";
           ctx.lineWidth = 2.5;
           ctx.stroke();
 
@@ -163,7 +164,7 @@ export function SpinWheel({
         // Outer ring — thick pitch marking
         ctx.beginPath();
         ctx.arc(CENTER, CENTER, WHEEL_RADIUS, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.strokeStyle = "#e8f0e8";
         ctx.lineWidth = 4;
         ctx.stroke();
 
@@ -172,7 +173,7 @@ export function SpinWheel({
         ctx.arc(CENTER, CENTER, 20, 0, Math.PI * 2);
         ctx.fillStyle = "#1e5c26";
         ctx.fill();
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.strokeStyle = "#e8f0e8";
         ctx.lineWidth = 3;
         ctx.stroke();
 
@@ -284,6 +285,7 @@ export function SpinWheel({
     return () => {
       cancelled = true;
       cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(fadeRafRef.current);
     };
   }, [teams, winner, segmentAngle]);
 
@@ -354,14 +356,14 @@ export function SpinWheel({
         function fadeIn() {
           revealAlphaRef.current = Math.min(1, revealAlphaRef.current + 0.035);
           if (revealAlphaRef.current < 1) {
-            requestAnimationFrame(fadeIn);
+            fadeRafRef.current = requestAnimationFrame(fadeIn);
           } else if (actionLabel) {
             setTimeout(() => setShowAction(true), 800);
           } else {
             setTimeout(() => onRevealCompleteRef.current(), 2000);
           }
         }
-        requestAnimationFrame(fadeIn);
+        fadeRafRef.current = requestAnimationFrame(fadeIn);
       }
 
       if (t < 1) {
