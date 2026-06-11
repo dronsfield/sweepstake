@@ -100,28 +100,28 @@ export function TeamReveal({
       {isNew ? (
         <div className={styles.cards}>
           <SlotCard
-            team={participant.topTierTeam}
-            label="Top Tier"
+            team={participant.bottomTierTeam}
+            label="Bottom Tier"
             delay={500}
           />
           <SlotCard
-            team={participant.bottomTierTeam}
-            label="Bottom Tier"
+            team={participant.topTierTeam}
+            label="Top Tier"
             delay={2500}
           />
         </div>
       ) : (
         <div className={styles.cards}>
           <div>
-            <p className={styles.cardLabel}>Top Tier</p>
-            <div className={`${styles.card} ${styles.cardStatic}`}>
-              <TeamBadge team={participant.topTierTeam} />
-            </div>
-          </div>
-          <div>
             <p className={styles.cardLabel}>Bottom Tier</p>
             <div className={`${styles.card} ${styles.cardStatic}`}>
               <TeamBadge team={participant.bottomTierTeam} />
+            </div>
+          </div>
+          <div>
+            <p className={styles.cardLabel}>Top Tier</p>
+            <div className={`${styles.card} ${styles.cardStatic}`}>
+              <TeamBadge team={participant.topTierTeam} />
             </div>
           </div>
         </div>

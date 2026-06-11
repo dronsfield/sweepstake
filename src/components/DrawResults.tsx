@@ -27,8 +27,8 @@ export function DrawResults({
         <thead>
           <tr>
             <th>Name</th>
-            <th>Team 1</th>
-            <th>Team 2</th>
+            <th>Top Tier</th>
+            <th>Bottom Tier</th>
           </tr>
         </thead>
         <tbody>
