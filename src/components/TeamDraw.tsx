@@ -38,7 +38,7 @@ export function TeamDraw({
         animate={{ opacity: 1, y: 0 }}
         style={{ fontSize: "1.125rem" }}
       >
-        <span style={{ color: "var(--wc-gold)", fontWeight: 600 }}>
+        <span style={{ color: "var(--gold)", fontWeight: 600 }}>
           {participant.name}
         </span>
         , let&apos;s draw your teams!
@@ -62,7 +62,7 @@ export function TeamDraw({
             <p
               style={{
                 fontSize: "0.875rem",
-                color: "rgba(255,255,255,0.6)",
+                color: "var(--bottom-tier)",
               }}
             >
               Bottom Tier
@@ -92,7 +92,7 @@ export function TeamDraw({
             <p
               style={{
                 fontSize: "0.875rem",
-                color: "rgba(255,255,255,0.6)",
+                color: "var(--top-tier)",
               }}
             >
               Top Tier
@@ -118,7 +118,7 @@ export function TeamDraw({
               gap: "1.5rem",
             }}
           >
-            <p style={{ fontSize: "1rem", color: "rgba(255,255,255,0.7)" }}>
+            <p style={{ fontSize: "1rem", color: "var(--text-secondary)" }}>
               Your teams:
             </p>
             <div
@@ -132,14 +132,14 @@ export function TeamDraw({
                 style={{
                   padding: "1rem 1.5rem",
                   borderRadius: "0.75rem",
-                  border: "2px solid var(--wc-gold)",
-                  background: "rgba(245, 166, 35, 0.1)",
+                  border: "2px solid var(--bottom-tier)",
+                  background: "var(--bottom-tier-muted)",
                 }}
               >
                 <p
                   style={{
                     fontSize: "0.75rem",
-                    color: "rgba(255,255,255,0.5)",
+                    color: "var(--bottom-tier)",
                     marginBottom: "0.25rem",
                   }}
                 >
@@ -151,14 +151,14 @@ export function TeamDraw({
                 style={{
                   padding: "1rem 1.5rem",
                   borderRadius: "0.75rem",
-                  border: "2px solid var(--wc-gold)",
-                  background: "rgba(245, 166, 35, 0.1)",
+                  border: "2px solid var(--top-tier)",
+                  background: "var(--top-tier-muted)",
                 }}
               >
                 <p
                   style={{
                     fontSize: "0.75rem",
-                    color: "rgba(255,255,255,0.5)",
+                    color: "var(--top-tier)",
                     marginBottom: "0.25rem",
                   }}
                 >
@@ -171,7 +171,7 @@ export function TeamDraw({
               href={`/${groupSlug}`}
               style={{
                 marginTop: "0.5rem",
-                background: "var(--wc-turquoise)",
+                background: "var(--green)",
                 color: "#fff",
                 fontWeight: 600,
                 padding: "0.75rem 1.5rem",

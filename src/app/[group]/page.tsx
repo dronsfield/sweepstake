@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DrawResults } from "@/components/DrawResults";
@@ -34,11 +35,21 @@ export default async function GroupPage({
   return (
     <div className={styles.container}>
       <header className={styles.hero}>
-        <h1 className={styles.title}>
-          <span className={styles.turquoise}>World Cup</span>{" "}
-          <span className={styles.coral}>2026</span>
-        </h1>
-        <p className={styles.groupName}>{group.displayName}</p>
+        <Image
+          src="/wclogoedit.png"
+          alt="FIFA World Cup 2026"
+          width={140}
+          height={200}
+          className={styles.logo}
+          priority
+        />
+        <div className={styles.heroText}>
+          <h1 className={styles.title}>
+            <span className={styles.green}>WC26</span>{" "}
+            <span className={styles.gold}>Sweepstake</span>
+          </h1>
+          <p className={styles.groupName}>{group.displayName}</p>
+        </div>
         <Link href={`/${groupSlug}/draw`} className={styles.ctaButton}>
           Enter the Draw
         </Link>

@@ -70,7 +70,7 @@ export default function TestAnimationPage() {
             style={{
               fontSize: "1.5rem",
               fontWeight: 700,
-              color: "var(--wc-turquoise)",
+              color: "var(--green)",
             }}
           >
             Animation Test
@@ -78,8 +78,8 @@ export default function TestAnimationPage() {
           <button
             onClick={pickAndReset}
             style={{
-              background: "var(--wc-purple)",
-              color: "#fff",
+              background: "var(--green)",
+              color: "var(--text)",
               fontWeight: 600,
               padding: "0.5rem 1rem",
               borderRadius: "0.5rem",
@@ -108,13 +108,13 @@ export default function TestAnimationPage() {
                 border: "2px solid",
                 borderColor:
                   style === s.key
-                    ? "var(--wc-turquoise)"
-                    : "rgba(255,255,255,0.15)",
+                    ? "var(--green)"
+                    : "var(--border)",
                 background:
                   style === s.key
-                    ? "rgba(0, 180, 216, 0.15)"
-                    : "rgba(255,255,255,0.05)",
-                color: style === s.key ? "#fff" : "rgba(255,255,255,0.5)",
+                    ? "var(--green-muted)"
+                    : "var(--surface)",
+                color: style === s.key ? "var(--text)" : "var(--text-tertiary)",
                 fontWeight: 600,
                 fontSize: "0.8rem",
                 cursor: "pointer",
@@ -137,10 +137,17 @@ export default function TestAnimationPage() {
                 borderRadius: "0.375rem",
                 border: "1px solid",
                 borderColor:
-                  tier === t ? "var(--wc-gold)" : "rgba(255,255,255,0.15)",
+                  tier === t
+                    ? t === "top" ? "var(--top-tier)" : "var(--bottom-tier)"
+                    : "var(--border)",
                 background:
-                  tier === t ? "rgba(245, 166, 35, 0.15)" : "transparent",
-                color: tier === t ? "var(--wc-gold)" : "rgba(255,255,255,0.4)",
+                  tier === t
+                    ? t === "top" ? "var(--top-tier-muted)" : "var(--bottom-tier-muted)"
+                    : "transparent",
+                color:
+                  tier === t
+                    ? t === "top" ? "var(--top-tier)" : "var(--bottom-tier)"
+                    : "var(--text-tertiary)",
                 fontWeight: 500,
                 fontSize: "0.75rem",
                 cursor: "pointer",
@@ -159,7 +166,7 @@ export default function TestAnimationPage() {
             <label
               style={{
                 fontSize: "0.75rem",
-                color: "rgba(255,255,255,0.4)",
+                color: "var(--text-tertiary)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -175,9 +182,9 @@ export default function TestAnimationPage() {
                 width: "3.5rem",
                 padding: "0.3rem 0.4rem",
                 borderRadius: "0.375rem",
-                border: "1px solid rgba(255,255,255,0.15)",
-                background: "rgba(255,255,255,0.05)",
-                color: "#fff",
+                border: "1px solid var(--border)",
+                background: "var(--surface)",
+                color: "var(--text)",
                 fontSize: "0.75rem",
                 textAlign: "center",
               }}
@@ -189,10 +196,10 @@ export default function TestAnimationPage() {
         <div
           style={{
             padding: "0.75rem 1rem",
-            background: "rgba(255,255,255,0.05)",
+            background: "var(--surface)",
             borderRadius: "0.5rem",
             fontSize: "0.8rem",
-            color: "rgba(255,255,255,0.5)",
+            color: "var(--text-tertiary)",
           }}
         >
           {winner && (

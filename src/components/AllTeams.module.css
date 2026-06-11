@@ -11,14 +11,14 @@
 
 .table th {
   padding: 0.4rem 0.5rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-weight: 500;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .table td {
   padding: 0.3rem 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
 }
 
 @media (min-width: 640px) {
@@ -36,11 +36,11 @@
 }
 
 .table tr:hover td {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface);
 }
 
 .ranking {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
 }
 
 .teamCell {
@@ -50,18 +50,18 @@
 }
 
 .potTop {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
+  background: var(--top-tier-muted);
+  color: var(--top-tier);
 }
 
 .potBottom {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background: var(--bottom-tier-muted);
+  color: var(--bottom-tier);
 }
 
 .potNone {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.3);
+  background: var(--surface);
+  color: var(--text-tertiary);
 }
 
 .drawnBy {
@@ -69,14 +69,14 @@
 }
 
 .available {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-tertiary);
   font-style: italic;
 }
 
 .dividerRow td {
   padding: 0.2rem 0.5rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 2px solid var(--border-hover);
+  background: var(--surface);
 }
 
 .dividerLabel {

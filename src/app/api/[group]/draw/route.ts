@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
-import { getTopTierTeams, getBottomTierTeams, Team } from "@/lib/teams";
+import { getTopTierTeams, getBottomTierTeams } from "@/lib/teams";
 import { getGroup, findByName } from "@/lib/groups";
 import { Participant } from "@/lib/types";
+
+const MAX_RETRIES = 5;
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -39,73 +41,77 @@ export async function POST(
 
     const db = await getDb();
     const collection = db.collection<Participant>("participants");
-
-    const existing = await collection.findOne({
-      group: groupSlug,
-      name: whitelistName,
-    });
-    if (existing) {
-      return NextResponse.json(
-        { error: "You have already drawn your teams", participant: existing },
-        { status: 409 }
-      );
-    }
-
     const participantCount = group.whitelist.length;
-    const allParticipants = await collection
-      .find({ group: groupSlug })
-      .toArray();
-    const drawnTopTeams = new Set(
-      allParticipants.map((p) => p.topTierTeam.name)
-    );
-    const drawnBottomTeams = new Set(
-      allParticipants.map((p) => p.bottomTierTeam.name)
-    );
 
-    const availableTop = getTopTierTeams(participantCount).filter(
-      (t) => !drawnTopTeams.has(t.name)
-    );
-    const availableBottom = getBottomTierTeams(participantCount).filter(
-      (t) => !drawnBottomTeams.has(t.name)
-    );
+    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+      const allParticipants = await collection
+        .find({ group: groupSlug })
+        .toArray();
 
-    if (availableTop.length === 0 || availableBottom.length === 0) {
-      return NextResponse.json(
-        { error: "All teams have been drawn" },
-        { status: 410 }
+      const existing = allParticipants.find((p) => p.name === whitelistName);
+      if (existing) {
+        return NextResponse.json(
+          { error: "You have already drawn your teams", participant: existing },
+          { status: 409 }
+        );
+      }
+
+      const drawnTopTeams = new Set(
+        allParticipants.map((p) => p.topTierTeam.name)
       );
-    }
+      const drawnBottomTeams = new Set(
+        allParticipants.map((p) => p.bottomTierTeam.name)
+      );
 
-    const topTierTeam: Team = pickRandom(availableTop);
-    const bottomTierTeam: Team = pickRandom(availableBottom);
+      const availableTop = getTopTierTeams(participantCount).filter(
+        (t) => !drawnTopTeams.has(t.name)
+      );
+      const availableBottom = getBottomTierTeams(participantCount).filter(
+        (t) => !drawnBottomTeams.has(t.name)
+      );
 
-    const participant: Participant = {
-      group: groupSlug,
-      name: whitelistName,
-      topTierTeam,
-      bottomTierTeam,
-      drawnAt: new Date().toISOString(),
-    };
+      if (availableTop.length === 0 || availableBottom.length === 0) {
+        return NextResponse.json(
+          { error: "All teams have been drawn" },
+          { status: 410 }
+        );
+      }
 
-    // Atomic upsert to prevent race conditions
-    const result = await collection.updateOne(
-      { group: groupSlug, name: whitelistName },
-      { $setOnInsert: participant },
-      { upsert: true }
-    );
-
-    if (result.upsertedCount === 0) {
-      const existing = await collection.findOne({
+      const participant: Participant = {
         group: groupSlug,
         name: whitelistName,
-      });
-      return NextResponse.json(
-        { error: "You have already drawn your teams", participant: existing },
-        { status: 409 }
-      );
+        topTierTeam: pickRandom(availableTop),
+        bottomTierTeam: pickRandom(availableBottom),
+        drawnAt: new Date().toISOString(),
+      };
+
+      try {
+        await collection.insertOne(participant as any);
+        return NextResponse.json({ participant });
+      } catch (err: any) {
+        if (err?.code === 11000) {
+          const keyPattern = err.keyPattern ?? {};
+          if (keyPattern.name) {
+            const existing = await collection.findOne({
+              group: groupSlug,
+              name: whitelistName,
+            });
+            return NextResponse.json(
+              { error: "You have already drawn your teams", participant: existing },
+              { status: 409 }
+            );
+          }
+          // Team collision — retry with fresh available pool
+          continue;
+        }
+        throw err;
+      }
     }
 
-    return NextResponse.json({ participant });
+    return NextResponse.json(
+      { error: "Draw failed after retries, please try again" },
+      { status: 503 }
+    );
   } catch (error) {
     console.error("Draw API error:", error);
     return NextResponse.json(

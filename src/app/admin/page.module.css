@@ -13,7 +13,7 @@
 }
 
 .backLink {
-  color: var(--wc-turquoise);
+  color: var(--green);
   font-size: 0.875rem;
   margin-bottom: 2rem;
   display: inline-block;
@@ -21,23 +21,23 @@
 }
 
 .backLink:hover {
-  color: rgba(0, 180, 216, 0.8);
+  color: var(--green-hover);
 }
 
 .title {
   font-size: 1.875rem;
   font-weight: 700;
-  color: var(--wc-coral);
+  color: var(--gold);
   margin-bottom: 2rem;
 }
 
 .empty {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
 }
 
 .groupCard {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 1.25rem;
   margin-bottom: 1rem;
@@ -56,25 +56,25 @@
 }
 
 .groupMeta {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
 
 .viewLink {
-  color: var(--wc-turquoise);
+  color: var(--green);
   font-size: 0.875rem;
   font-weight: 500;
   transition: color 0.2s;
 }
 
 .viewLink:hover {
-  color: rgba(0, 180, 216, 0.8);
+  color: var(--green-hover);
 }
 
 .dangerButton {
-  background: var(--wc-coral);
-  color: #fff;
+  background: var(--danger);
+  color: var(--text);
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -85,13 +85,13 @@
 }
 
 .dangerButton:hover {
-  background: rgba(255, 107, 107, 0.8);
+  background: #d63c3c;
 }
 
 .confirmBox {
   padding: 1rem;
-  background: rgba(255, 107, 107, 0.1);
-  border: 1px solid rgba(255, 107, 107, 0.3);
+  background: var(--danger-muted);
+  border: 1px solid var(--danger);
   border-radius: 0.5rem;
 }
 
@@ -107,8 +107,8 @@
 }
 
 .cancelButton {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--surface);
+  color: var(--text);
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -119,12 +119,12 @@
 }
 
 .cancelButton:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--border);
 }
 
 .status {
   margin-top: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 
@@ -137,15 +137,15 @@
 
 .pinLabel {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .pinInput {
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
-  color: #fff;
+  color: var(--text);
   font-size: 1.5rem;
   letter-spacing: 0.5em;
   text-align: center;
@@ -154,17 +154,17 @@
 }
 
 .pinInput:focus {
-  border-color: var(--wc-turquoise);
+  border-color: var(--green);
 }
 
 .pinError {
-  color: var(--wc-coral);
+  color: var(--danger);
   font-size: 0.875rem;
 }
 
 .pinButton {
-  background: var(--wc-turquoise);
-  color: #fff;
+  background: var(--green);
+  color: var(--text);
   font-weight: 600;
   padding: 0.625rem 1rem;
   border-radius: 0.5rem;
@@ -175,26 +175,26 @@
 }
 
 .pinButton:hover {
-  background: rgba(0, 180, 216, 0.8);
+  background: var(--green-hover);
 }
 
 .errorBox {
   padding: 1rem;
-  background: rgba(255, 107, 107, 0.2);
-  border: 1px solid rgba(255, 107, 107, 0.4);
+  background: var(--danger-muted);
+  border: 1px solid var(--danger);
   border-radius: 0.5rem;
   margin-bottom: 1rem;
 }
 
 .errorText {
-  color: var(--wc-coral);
+  color: var(--danger);
   font-weight: 500;
   margin-bottom: 0.75rem;
 }
 
 .retryButton {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   background: none;
   border: none;
   cursor: pointer;
@@ -202,5 +202,5 @@
 }
 
 .retryButton:hover {
-  color: #fff;
+  color: var(--text);
 }

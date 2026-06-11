@@ -126,6 +126,7 @@ export function FlagArena({
       canvas.height = CANVAS_SIZE * dpr;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
+      const fontFamily = getComputedStyle(canvas).getPropertyValue("--font-geist-sans").trim() || "sans-serif";
 
       function draw() {
         if (cancelled) return;
@@ -258,13 +259,13 @@ export function FlagArena({
             );
           }
 
-          ctx!.fillStyle = "#ffffff";
-          ctx!.font = "bold 24px sans-serif";
+          ctx!.fillStyle = "#fff";
+          ctx!.font = `bold 24px ${fontFamily}`;
           ctx!.textAlign = "center";
           ctx!.fillText(winner.name, CENTER, CENTER + REVEAL_FLAG_SIZE / 2);
 
-          ctx!.fillStyle = "rgba(255,255,255,0.5)";
-          ctx!.font = "14px sans-serif";
+          ctx!.fillStyle = "#a09fa3";
+          ctx!.font = `14px ${fontFamily}`;
           ctx!.fillText(
             `FIFA Ranking: #${winner.fifaRanking}`,
             CENTER,
@@ -441,8 +442,8 @@ export function FlagArena({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            background: "var(--wc-coral)",
-            color: "#fff",
+            background: "var(--gold)",
+            color: "var(--bg)",
             fontWeight: 600,
             padding: "0.75rem 2rem",
             borderRadius: "0.5rem",

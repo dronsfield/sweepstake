@@ -72,8 +72,10 @@ export default function DrawPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const entry = names.find((n) => n.name === name.trim());
-    if (entry?.drawn) {
+    const entry = names.find((n) => n.name.toLowerCase() === name.trim().toLowerCase());
+    if (!entry) return;
+    setName(entry.name);
+    if (entry.drawn) {
       handleConfirm();
     } else {
       setState({ step: "confirm" });
@@ -112,8 +114,8 @@ export default function DrawPage() {
         </Link>
 
         <h1 className={styles.title}>
-          <span className={styles.turquoise}>Draw</span>{" "}
-          <span className={styles.coral}>Your Teams</span>
+          <span className={styles.green}>Draw</span>{" "}
+          <span className={styles.gold}>Your Teams</span>
         </h1>
 
         {state.step === "enter" && (
@@ -141,12 +143,7 @@ export default function DrawPage() {
                 required
               />
               <ul ref={listRef} className={styles.listbox} role="listbox">
-                {!name.trim() && (
-                  <li className={styles.listboxMessage}>
-                    Type your name to find yourself
-                  </li>
-                )}
-                {name.trim() && filtered.length === 0 && (
+                  {name.trim() && filtered.length === 0 && (
                   <li className={styles.listboxMessage}>
                     No matching names found
                   </li>
@@ -170,9 +167,9 @@ export default function DrawPage() {
             <button
               type="submit"
               className={styles.submitButton}
-              disabled={!name.trim()}
+              disabled={!names.some((n) => n.name.toLowerCase() === name.trim().toLowerCase())}
             >
-              Draw My Teams
+              Next
             </button>
           </form>
         )}
@@ -208,7 +205,7 @@ export default function DrawPage() {
         )}
 
         {state.step === "reveal" && (
-          <TeamReveal participant={state.participant} isNew groupSlug={group} />
+          <TeamReveal participant={state.participant} isNew groupSlug={group} participantCount={names.length} />
         )}
 
         {state.step === "already-drawn" && (
@@ -216,6 +213,7 @@ export default function DrawPage() {
             participant={state.participant}
             isNew={false}
             groupSlug={group}
+            participantCount={names.length}
           />
         )}
 

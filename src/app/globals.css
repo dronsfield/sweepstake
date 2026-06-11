@@ -9,12 +9,24 @@
 }
 
 :root {
-  --wc-turquoise: #00b4d8;
-  --wc-coral: #ff6b6b;
-  --wc-purple: #7b2d8e;
-  --wc-dark: #1a1a2e;
-  --wc-gold: #f5a623;
-  --wc-light: #f0f4f8;
+  --bg: #15141A;
+  --green: #2e8b3a;
+  --green-hover: #256e2f;
+  --green-muted: #1d2e20;
+  --gold: #d4a844;
+  --gold-muted: #2a261b;
+  --danger: #ef4444;
+  --danger-muted: #3d1a1c;
+  --text: #ffffff;
+  --text-secondary: #a09fa3;
+  --text-tertiary: #5b5a5e;
+  --surface: #1e1d24;
+  --border: #2b2a31;
+  --border-hover: #3e3d45;
+  --top-tier: #d4a844;
+  --top-tier-muted: #2a261b;
+  --bottom-tier: #a8a8b0;
+  --bottom-tier-muted: #232328;
 }
 
 html,
@@ -23,8 +35,11 @@ body {
 }
 
 body {
-  background: var(--wc-dark);
-  color: #ffffff;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, var(--green-muted) 0%, transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -33,6 +48,13 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 @keyframes card-flip {

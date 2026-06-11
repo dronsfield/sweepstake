@@ -106,6 +106,7 @@ export function SpinWheel({
       canvas.width = CANVAS_SIZE * dpr;
       canvas.height = CANVAS_SIZE * dpr;
       const ctx = canvas.getContext("2d")!;
+      const fontFamily = getComputedStyle(canvas).getPropertyValue("--font-geist-sans").trim() || "sans-serif";
 
       function draw() {
         if (cancelled) return;
@@ -203,7 +204,7 @@ export function SpinWheel({
           // Darken background
           ctx.beginPath();
           ctx.arc(CENTER, CENTER, WHEEL_RADIUS + 4, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(10, 10, 30, 0.88)";
+          ctx.fillStyle = "#15141A";
           ctx.fill();
 
           // Flag — bouncy scale entrance
@@ -234,7 +235,7 @@ export function SpinWheel({
           const nameEase = 1 - Math.pow(1 - nameT, 3);
           ctx.globalAlpha = alpha * nameEase;
           ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 24px sans-serif";
+          ctx.font = `bold 24px ${fontFamily}`;
           ctx.textAlign = "center";
           ctx.fillText(winner.name, CENTER, revealY + 55 + (1 - nameEase) * 15);
 
@@ -242,8 +243,8 @@ export function SpinWheel({
           const rankT = Math.max(0, Math.min((rt - 0.6) / 0.5, 1));
           const rankEase = 1 - Math.pow(1 - rankT, 3);
           ctx.globalAlpha = alpha * rankEase;
-          ctx.fillStyle = "rgba(255,255,255,0.5)";
-          ctx.font = "14px sans-serif";
+          ctx.fillStyle = "#a09fa3";
+          ctx.font = `14px ${fontFamily}`;
           ctx.fillText(
             `FIFA Ranking: #${winner.fifaRanking}`,
             CENTER,
@@ -300,9 +301,7 @@ export function SpinWheel({
     //   finalAngle = -(winnerIndex + 0.5) * segmentAngle  (mod 2PI)
     // Top tier: land near the trailing edge (barely made it)
     // Bottom tier: land 50-70% through (mid-segment, less dramatic)
-    const offset = tier === "bottom"
-      ? 0.5 + Math.random() * 0.2
-      : 0.85 + Math.random() * 0.1;
+    const offset = tier === "bottom" ? 0.62 : 0.88;
     const targetAngle = -((winnerIndex + offset) * segmentAngle);
     // Normalize current angle to [0, 2PI)
     const currentMod =
@@ -392,14 +391,15 @@ export function SpinWheel({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            background: "var(--wc-coral)",
-            color: "#fff",
-            fontWeight: 600,
-            padding: "0.75rem 2rem",
-            borderRadius: "0.5rem",
+            background: "var(--gold)",
+            color: "var(--bg)",
+            fontWeight: 700,
+            padding: "0.875rem 2rem",
+            borderRadius: "9999px",
             border: "none",
             cursor: "pointer",
             fontSize: "1rem",
+            letterSpacing: "0.01em",
             opacity: buttonState === "fading" ? 0 : 1,
             transition: "opacity 0.4s ease",
             zIndex: 1,
@@ -416,14 +416,15 @@ export function SpinWheel({
             top: "62%",
             left: "50%",
             transform: "translateX(-50%)",
-            background: "var(--wc-coral)",
-            color: "#fff",
-            fontWeight: 600,
-            padding: "0.5rem 1.5rem",
-            borderRadius: "0.5rem",
+            background: "var(--gold)",
+            color: "var(--bg)",
+            fontWeight: 700,
+            padding: "0.625rem 1.5rem",
+            borderRadius: "9999px",
             border: "none",
             cursor: "pointer",
             fontSize: "0.875rem",
+            letterSpacing: "0.01em",
             zIndex: 1,
           }}
         >

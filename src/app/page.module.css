@@ -4,33 +4,41 @@
   flex: 1;
   align-items: center;
   justify-content: center;
+  gap: 1.5rem;
   padding: 4rem 1.5rem;
   min-height: 100vh;
 }
 
+.logo {
+  height: auto;
+  width: 100px;
+  filter: drop-shadow(0 0 30px rgba(212, 168, 68, 0.3));
+}
+
+@media (min-width: 640px) {
+  .logo {
+    width: 140px;
+  }
+}
+
 .title {
-  font-size: 3rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  text-align: center;
-}
-
-.turquoise {
-  color: var(--wc-turquoise);
-}
-
-.coral {
-  color: var(--wc-coral);
-}
-
-.subtitle {
-  margin-top: 1rem;
   font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 @media (min-width: 640px) {
   .title {
-    font-size: 3.75rem;
+    font-size: 1.5rem;
   }
+}
+
+.green {
+  color: var(--green);
+}
+
+.gold {
+  color: var(--gold);
 }
