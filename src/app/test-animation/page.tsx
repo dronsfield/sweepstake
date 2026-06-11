@@ -1,43 +1,52 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { TeamDraw } from "@/components/TeamDraw";
-import { WC26_TEAMS, Team } from "@/lib/teams";
-import { Participant } from "@/lib/types";
+import { useState, useEffect, useMemo } from "react";
+import { Team, getTopTierTeams, getBottomTierTeams } from "@/lib/teams";
+import { FlagArena } from "@/components/FlagArena";
+import { SpinWheel } from "@/components/SpinWheel";
 
-const PARTICIPANT_COUNT = 19;
+const PARTICIPANT_COUNT = 20;
+
+type AnimStyle = "arena" | "wheel";
 
 function pickRandom(teams: Team[]): Team {
   return teams[Math.floor(Math.random() * teams.length)];
 }
 
-function generateDummyParticipant(): Participant {
-  const topTier = WC26_TEAMS.slice(0, PARTICIPANT_COUNT);
-  const bottomTier = WC26_TEAMS.slice(PARTICIPANT_COUNT, PARTICIPANT_COUNT * 2);
-
-  return {
-    group: "test",
-    name: "James",
-    topTierTeam: pickRandom(topTier),
-    bottomTierTeam: pickRandom(bottomTier),
-    drawnAt: new Date().toISOString(),
-  };
-}
+const STYLES: { key: AnimStyle; label: string }[] = [
+  { key: "arena", label: "Flag Arena" },
+  { key: "wheel", label: "Spin Wheel" },
+];
 
 export default function TestAnimationPage() {
-  const [participant, setParticipant] = useState<Participant | null>(null);
   const [key, setKey] = useState(0);
+  const [style, setStyle] = useState<AnimStyle>("wheel");
+  const [tier, setTier] = useState<"top" | "bottom">("bottom");
+  const [teamsLeft, setTeamsLeft] = useState(20);
+  const [winner, setWinner] = useState<Team | null>(null);
 
-  useEffect(() => {
-    setParticipant(generateDummyParticipant());
-  }, []);
+  const allTeams = useMemo(
+    () =>
+      tier === "top"
+        ? getTopTierTeams(PARTICIPANT_COUNT)
+        : getBottomTierTeams(PARTICIPANT_COUNT),
+    [tier]
+  );
 
-  function reset() {
-    setParticipant(generateDummyParticipant());
+  const teams = useMemo(
+    () => allTeams.slice(0, Math.max(2, Math.min(teamsLeft, allTeams.length))),
+    [allTeams, teamsLeft]
+  );
+
+  function pickAndReset() {
+    setWinner(pickRandom(teams));
     setKey((k) => k + 1);
   }
 
-  if (!participant) return null;
+  useEffect(() => {
+    setWinner(pickRandom(teams));
+    setKey((k) => k + 1);
+  }, [tier, teamsLeft]);
 
   return (
     <div style={{ minHeight: "100vh", padding: "2rem" }}>
@@ -67,7 +76,7 @@ export default function TestAnimationPage() {
             Animation Test
           </h1>
           <button
-            onClick={reset}
+            onClick={pickAndReset}
             style={{
               background: "var(--wc-purple)",
               color: "#fff",
@@ -83,6 +92,100 @@ export default function TestAnimationPage() {
           </button>
         </div>
 
+        {/* Style picker */}
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          {STYLES.map((s) => (
+            <button
+              key={s.key}
+              onClick={() => {
+                setStyle(s.key);
+                setKey((k) => k + 1);
+              }}
+              style={{
+                flex: 1,
+                padding: "0.5rem",
+                borderRadius: "0.5rem",
+                border: "2px solid",
+                borderColor:
+                  style === s.key
+                    ? "var(--wc-turquoise)"
+                    : "rgba(255,255,255,0.15)",
+                background:
+                  style === s.key
+                    ? "rgba(0, 180, 216, 0.15)"
+                    : "rgba(255,255,255,0.05)",
+                color: style === s.key ? "#fff" : "rgba(255,255,255,0.5)",
+                fontWeight: 600,
+                fontSize: "0.8rem",
+                cursor: "pointer",
+              }}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tier picker + teams left */}
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          {(["bottom", "top"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTier(t)}
+              style={{
+                flex: 1,
+                padding: "0.4rem",
+                borderRadius: "0.375rem",
+                border: "1px solid",
+                borderColor:
+                  tier === t ? "var(--wc-gold)" : "rgba(255,255,255,0.15)",
+                background:
+                  tier === t ? "rgba(245, 166, 35, 0.15)" : "transparent",
+                color: tier === t ? "var(--wc-gold)" : "rgba(255,255,255,0.4)",
+                fontWeight: 500,
+                fontSize: "0.75rem",
+                cursor: "pointer",
+              }}
+            >
+              {t === "top" ? "Top Tier" : "Bottom Tier"}
+            </button>
+          ))}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.375rem",
+            }}
+          >
+            <label
+              style={{
+                fontSize: "0.75rem",
+                color: "rgba(255,255,255,0.4)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Teams:
+            </label>
+            <input
+              type="number"
+              min={2}
+              max={allTeams.length}
+              value={teamsLeft}
+              onChange={(e) => setTeamsLeft(Number(e.target.value))}
+              style={{
+                width: "3.5rem",
+                padding: "0.3rem 0.4rem",
+                borderRadius: "0.375rem",
+                border: "1px solid rgba(255,255,255,0.15)",
+                background: "rgba(255,255,255,0.05)",
+                color: "#fff",
+                fontSize: "0.75rem",
+                textAlign: "center",
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Info */}
         <div
           style={{
             padding: "0.75rem 1rem",
@@ -92,22 +195,35 @@ export default function TestAnimationPage() {
             color: "rgba(255,255,255,0.5)",
           }}
         >
-          <p>
-            Bottom: {participant.bottomTierTeam.name} (#
-            {participant.bottomTierTeam.fifaRanking})
-          </p>
-          <p>
-            Top: {participant.topTierTeam.name} (#
-            {participant.topTierTeam.fifaRanking})
-          </p>
+          {winner && (
+            <p>
+              Winner: {winner.name} (#{winner.fifaRanking}) &middot;{" "}
+              {teams.length} teams on wheel
+            </p>
+          )}
         </div>
 
-        <TeamDraw
-          key={key}
-          participant={participant}
-          groupSlug="test"
-          participantCount={PARTICIPANT_COUNT}
-        />
+        {/* Animation */}
+        {winner && (
+          <>
+            {style === "arena" && (
+              <FlagArena
+                key={key}
+                teams={teams}
+                winner={winner}
+                onRevealComplete={() => {}}
+              />
+            )}
+            {style === "wheel" && (
+              <SpinWheel
+                key={key}
+                teams={teams}
+                winner={winner}
+                onRevealComplete={() => {}}
+              />
+            )}
+          </>
+        )}
       </div>
     </div>
   );
