@@ -1,16 +1,11 @@
-export type WhitelistEntry = {
-  phoneNumber: string;
-  name: string;
-};
-
 export type Group = {
   slug: string;
   displayName: string;
-  whitelist: WhitelistEntry[];
+  whitelist: string[];
 };
 
-// Compact format: [slug, displayName, [[phone, name], ...]]
-type CompactGroup = [string, string, [string, string][]];
+// Compact format: [slug, displayName, [name, ...]]
+type CompactGroup = [string, string, string[]];
 
 let cachedGroups: Group[] | null = null;
 
@@ -24,10 +19,10 @@ function loadGroups(): Group[] {
   }
 
   const compact = JSON.parse(raw) as CompactGroup[];
-  cachedGroups = compact.map(([slug, displayName, entries]) => ({
+  cachedGroups = compact.map(([slug, displayName, names]) => ({
     slug,
     displayName,
-    whitelist: entries.map(([phoneNumber, name]) => ({ phoneNumber, name })),
+    whitelist: names,
   }));
   return cachedGroups;
 }
@@ -40,9 +35,11 @@ export function getGroup(slug: string): Group | undefined {
   return loadGroups().find((g) => g.slug === slug);
 }
 
-export function findByPhone(
+export function findByName(
   group: Group,
-  phoneNumber: string
-): WhitelistEntry | undefined {
-  return group.whitelist.find((entry) => entry.phoneNumber === phoneNumber);
+  name: string
+): string | undefined {
+  return group.whitelist.find(
+    (entry) => entry.toLowerCase() === name.toLowerCase()
+  );
 }

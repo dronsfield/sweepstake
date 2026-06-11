@@ -16,16 +16,18 @@ export async function GET(
     }
 
     const db = await getDb();
-    const participants = await db
+    const drawn = await db
       .collection<Participant>("participants")
-      .find(
-        { group: groupSlug },
-        { projection: { _id: 0, group: 0 } }
-      )
-      .sort({ drawnAt: 1 })
+      .find({ group: groupSlug }, { projection: { name: 1 } })
       .toArray();
+    const drawnNames = new Set(drawn.map((p) => p.name));
 
-    return NextResponse.json({ participants });
+    const names = group.whitelist.map((name) => ({
+      name,
+      drawn: drawnNames.has(name),
+    }));
+
+    return NextResponse.json({ names });
   } catch {
     return NextResponse.json(
       { error: "Internal server error" },

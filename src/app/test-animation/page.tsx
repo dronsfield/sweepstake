@@ -17,7 +17,6 @@ function generateDummyParticipant(): Participant {
 
   return {
     group: "test",
-    phoneNumber: "+447000000000",
     name: "James",
     topTierTeam: pickRandom(topTier),
     bottomTierTeam: pickRandom(bottomTier),

@@ -14,7 +14,7 @@ async function getParticipants(groupSlug: string): Promise<Participant[]> {
     const db = await getDb();
     const participants = await db
       .collection<Participant>("participants")
-      .find({ group: groupSlug }, { projection: { _id: 0, phoneNumber: 0 } })
+      .find({ group: groupSlug }, { projection: { _id: 0 } })
       .sort({ drawnAt: 1 })
       .toArray();
     return participants;
@@ -52,7 +52,7 @@ export default async function GroupPage({
         <h2 className={styles.resultsHeading}>Draw Results</h2>
         <DrawResults
           participants={participants}
-          allNames={group.whitelist.map((w) => w.name)}
+          allNames={group.whitelist}
         />
 
         <h2 className={styles.teamsHeading}>All Teams</h2>

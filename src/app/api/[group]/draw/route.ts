@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { getTopTierTeams, getBottomTierTeams, Team } from "@/lib/teams";
-import { getGroup, findByPhone } from "@/lib/groups";
+import { getGroup, findByName } from "@/lib/groups";
 import { Participant } from "@/lib/types";
 
 function pickRandom<T>(arr: T[]): T {
@@ -20,19 +20,19 @@ export async function POST(
       return NextResponse.json({ error: "Group not found" }, { status: 404 });
     }
 
-    const { phoneNumber } = await request.json();
+    const { name } = await request.json();
 
-    if (!phoneNumber || typeof phoneNumber !== "string") {
+    if (!name || typeof name !== "string") {
       return NextResponse.json(
-        { error: "Phone number is required" },
+        { error: "Name is required" },
         { status: 400 }
       );
     }
 
-    const whitelistEntry = findByPhone(group, phoneNumber);
-    if (!whitelistEntry) {
+    const whitelistName = findByName(group, name);
+    if (!whitelistName) {
       return NextResponse.json(
-        { error: "Phone number is not registered for this sweepstake" },
+        { error: "Name is not registered for this sweepstake" },
         { status: 403 }
       );
     }
@@ -42,7 +42,7 @@ export async function POST(
 
     const existing = await collection.findOne({
       group: groupSlug,
-      phoneNumber,
+      name: whitelistName,
     });
     if (existing) {
       return NextResponse.json(
@@ -81,8 +81,7 @@ export async function POST(
 
     const participant: Participant = {
       group: groupSlug,
-      phoneNumber,
-      name: whitelistEntry.name,
+      name: whitelistName,
       topTierTeam,
       bottomTierTeam,
       drawnAt: new Date().toISOString(),
@@ -90,7 +89,7 @@ export async function POST(
 
     // Atomic upsert to prevent race conditions
     const result = await collection.updateOne(
-      { group: groupSlug, phoneNumber },
+      { group: groupSlug, name: whitelistName },
       { $setOnInsert: participant },
       { upsert: true }
     );
@@ -98,7 +97,7 @@ export async function POST(
     if (result.upsertedCount === 0) {
       const existing = await collection.findOne({
         group: groupSlug,
-        phoneNumber,
+        name: whitelistName,
       });
       return NextResponse.json(
         { error: "You have already drawn your teams", participant: existing },
