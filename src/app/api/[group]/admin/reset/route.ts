@@ -24,7 +24,8 @@ export async function POST(
       .deleteMany({ group: groupSlug });
 
     return NextResponse.json({ deletedCount: result.deletedCount });
-  } catch {
+  } catch (error) {
+    console.error("Admin reset API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

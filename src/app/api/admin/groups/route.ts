@@ -26,7 +26,8 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.json({ groups });
-  } catch {
+  } catch (error) {
+    console.error("Admin groups API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

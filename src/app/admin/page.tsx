@@ -19,22 +19,31 @@ export default function AdminPage() {
   const [pin, setPin] = useState("");
   const [authed, setAuthed] = useState(false);
   const [pinError, setPinError] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [groups, setGroups] = useState<GroupInfo[]>([]);
   const [confirming, setConfirming] = useState<string | null>(null);
   const [statuses, setStatuses] = useState<Record<string, string>>({});
 
   const loadGroups = useCallback(async (p: string) => {
-    const res = await fetch("/api/admin/groups", {
-      headers: adminHeaders(p),
-    });
-    if (res.status === 401) {
-      setAuthed(false);
-      setPinError(true);
-      return;
+    try {
+      setLoadError(false);
+      const res = await fetch("/api/admin/groups", {
+        headers: adminHeaders(p),
+      });
+      if (res.status === 401) {
+        setAuthed(false);
+        setPinError(true);
+        return;
+      }
+      if (!res.ok) throw new Error(`API returned ${res.status}`);
+      const data = await res.json();
+      setGroups(data.groups ?? []);
+      setAuthed(true);
+    } catch (error) {
+      console.error("Failed to load admin groups:", error);
+      setAuthed(true);
+      setLoadError(true);
     }
-    const data = await res.json();
-    setGroups(data.groups ?? []);
-    setAuthed(true);
   }, []);
 
   useEffect(() => {
@@ -130,7 +139,21 @@ export default function AdminPage() {
 
         <h1 className={styles.title}>Admin</h1>
 
-        {groups.length === 0 && (
+        {loadError && (
+          <div className={styles.errorBox}>
+            <p className={styles.errorText}>
+              Something went wrong loading groups.
+            </p>
+            <button
+              onClick={() => loadGroups(pin)}
+              className={styles.retryButton}
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
+        {!loadError && groups.length === 0 && (
           <p className={styles.empty}>No groups configured.</p>
         )}
 

@@ -10,17 +10,13 @@ import styles from "./page.module.css";
 export const dynamic = "force-dynamic";
 
 async function getParticipants(groupSlug: string): Promise<Participant[]> {
-  try {
-    const db = await getDb();
-    const participants = await db
-      .collection<Participant>("participants")
-      .find({ group: groupSlug }, { projection: { _id: 0 } })
-      .sort({ drawnAt: 1 })
-      .toArray();
-    return participants;
-  } catch {
-    return [];
-  }
+  const db = await getDb();
+  const participants = await db
+    .collection<Participant>("participants")
+    .find({ group: groupSlug }, { projection: { _id: 0 } })
+    .sort({ drawnAt: 1 })
+    .toArray();
+  return participants;
 }
 
 export default async function GroupPage({

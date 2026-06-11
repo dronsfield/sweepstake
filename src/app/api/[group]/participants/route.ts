@@ -26,7 +26,8 @@ export async function GET(
       .toArray();
 
     return NextResponse.json({ participants });
-  } catch {
+  } catch (error) {
+    console.error("Participants API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -13,7 +13,8 @@ type DrawState =
   | { step: "loading" }
   | { step: "reveal"; participant: Participant }
   | { step: "already-drawn"; participant: Participant }
-  | { step: "error"; message: string };
+  | { step: "error"; message: string }
+  | { step: "fatal" };
 
 export default function DrawPage() {
   const { group } = useParams<{ group: string }>();
@@ -27,8 +28,15 @@ export default function DrawPage() {
 
   useEffect(() => {
     fetch(`/api/${group}/names`)
-      .then((r) => r.json())
-      .then((data) => setNames(data.names ?? []));
+      .then((r) => {
+        if (!r.ok) throw new Error(`Names API returned ${r.status}`);
+        return r.json();
+      })
+      .then((data) => setNames(data.names ?? []))
+      .catch((error) => {
+        console.error("Failed to load names:", error);
+        setState({ step: "fatal" });
+      });
   }, [group]);
 
   const filtered = names.filter((entry) =>
@@ -209,6 +217,20 @@ export default function DrawPage() {
             isNew={false}
             groupSlug={group}
           />
+        )}
+
+        {state.step === "fatal" && (
+          <div className={styles.error}>
+            <p className={styles.errorMessage}>
+              Something went wrong loading this page.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className={styles.retryButton}
+            >
+              Reload page
+            </button>
+          </div>
         )}
 
         {state.step === "error" && (

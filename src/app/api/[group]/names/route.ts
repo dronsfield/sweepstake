@@ -28,7 +28,8 @@ export async function GET(
     }));
 
     return NextResponse.json({ names });
-  } catch {
+  } catch (error) {
+    console.error("Names API error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

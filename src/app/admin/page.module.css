@@ -177,3 +177,30 @@
 .pinButton:hover {
   background: rgba(0, 180, 216, 0.8);
 }
+
+.errorBox {
+  padding: 1rem;
+  background: rgba(255, 107, 107, 0.2);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.errorText {
+  color: var(--wc-coral);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.retryButton {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.retryButton:hover {
+  color: #fff;
+}
