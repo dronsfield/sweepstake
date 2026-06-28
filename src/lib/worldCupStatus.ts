@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { cacheLife } from "next/cache";
 import { WC26_TEAMS } from "./teams";
 
 export type WorldCupTeamStatus = {
@@ -34,6 +35,9 @@ function canonicaliseWikiTeamName(wikiName: string): string | null {
 }
 
 export async function fetchWorldCupKnockoutHtml(): Promise<string> {
+  "use cache";
+  cacheLife({ revalidate: 3600 });
+
   const url = new URL("https://en.wikipedia.org/w/api.php");
   url.search = new URLSearchParams({
     action: "parse",
@@ -48,7 +52,6 @@ export async function fetchWorldCupKnockoutHtml(): Promise<string> {
     headers: {
       "User-Agent": "wc26-sweepstake/0.1 (personal project)",
     },
-    next: { revalidate: 3600 },
   });
 
   if (!res.ok) {
