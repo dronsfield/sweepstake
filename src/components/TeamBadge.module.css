@@ -4,6 +4,14 @@
   gap: 0.5rem;
 }
 
+.flag {
+  width: 1.33em;
+  height: 1em;
+  object-fit: cover;
+  border-radius: 1px;
+  vertical-align: middle;
+}
+
 .ranking {
   color: var(--text-tertiary);
   font-size: 0.875rem;

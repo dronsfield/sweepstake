@@ -10,7 +10,12 @@ export function TeamBadge({
 }) {
   return (
     <span className={styles.badge}>
-      <span className={`fi fi-${team.code}`} style={eliminated ? { opacity: 0.5 } : undefined} />
+      <img
+        src={`/flags/${team.code}.svg`}
+        alt=""
+        className={styles.flag}
+        style={eliminated ? { opacity: 0.5 } : undefined}
+      />
       <span className={eliminated ? styles.eliminated : undefined}>{team.name}</span>
       <span className={styles.ranking}>#{team.fifaRanking}</span>
     </span>

@@ -74,6 +74,7 @@ export default async function GroupPage({
           participants={participants}
           allNames={group.whitelist}
           eliminatedTeams={[...eliminatedTeams]}
+          groupName={group.displayName}
         />
 
         <h2 className={styles.teamsHeading}>All Teams</h2>
