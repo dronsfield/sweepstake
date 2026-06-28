@@ -9,6 +9,8 @@ import { getWorldCupStatuses } from "@/lib/worldCupStatus";
 import { Participant } from "@/lib/types";
 import styles from "./page.module.css";
 
+export const dynamic = "force-dynamic";
+
 async function getParticipants(groupSlug: string): Promise<Participant[]> {
   const db = await getDb();
   const participants = await db

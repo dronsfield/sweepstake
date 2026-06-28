@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { cacheLife } from "next/cache";
+import { getDb } from "./mongodb";
 import { WC26_TEAMS } from "./teams";
 
 export type WorldCupTeamStatus = {
@@ -34,10 +34,10 @@ function canonicaliseWikiTeamName(wikiName: string): string | null {
   return WC26_TEAMS.some((t) => t.name === mapped) ? mapped : null;
 }
 
-export async function fetchWorldCupKnockoutHtml(): Promise<string> {
-  "use cache";
-  cacheLife({ revalidate: 3600 });
+const CACHE_MAX_AGE_MS = 60 * 60 * 1000; // 1 hour
+const CACHE_KEY = "world-cup-statuses";
 
+export async function fetchWorldCupKnockoutHtml(): Promise<string> {
   const url = new URL("https://en.wikipedia.org/w/api.php");
   url.search = new URLSearchParams({
     action: "parse",
@@ -183,7 +183,7 @@ export function deriveWorldCupStatuses(
   }).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export async function getWorldCupStatuses(): Promise<WorldCupStatusResponse> {
+async function fetchAndParseStatuses(): Promise<WorldCupStatusResponse> {
   const warnings: string[] = [];
 
   let html: string;
@@ -248,4 +248,26 @@ export async function getWorldCupStatuses(): Promise<WorldCupStatusResponse> {
     warnings,
     teams: deriveWorldCupStatuses(qualifiedTeams, knockoutLosers),
   };
+}
+
+export async function getWorldCupStatuses(): Promise<WorldCupStatusResponse> {
+  const db = await getDb();
+  const cached = await db.collection("cache").findOne({ key: CACHE_KEY });
+
+  if (cached) {
+    const age = Date.now() - new Date(cached.fetchedAt).getTime();
+    if (age < CACHE_MAX_AGE_MS) return cached.data as WorldCupStatusResponse;
+  }
+
+  const result = await fetchAndParseStatuses();
+
+  if (result.warnings.length === 0 || result.warnings.every((w) => !w.startsWith("Failed"))) {
+    await db.collection("cache").updateOne(
+      { key: CACHE_KEY },
+      { $set: { data: result, fetchedAt: new Date() } },
+      { upsert: true },
+    );
+  }
+
+  return result;
 }
