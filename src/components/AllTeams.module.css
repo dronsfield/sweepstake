@@ -1,53 +1,11 @@
 .tableWrap {
-  overflow-x: auto;
+  composes: tableWrap from "./Table.module.css";
 }
 
 .table {
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-  font-size: 0.85rem;
+  composes: table from "./Table.module.css";
 }
 
-.table th {
-  padding: 0.4rem 0.5rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  border-bottom: 1px solid var(--border);
-}
-
-.table td {
-  padding: 0.3rem 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-@media (min-width: 640px) {
-  .table {
-    font-size: 1rem;
-  }
-
-  .table th {
-    padding: 0.6rem 1rem;
-  }
-
-  .table td {
-    padding: 0.5rem 1rem;
-  }
-}
-
-.table tr:hover td {
-  background: var(--surface);
-}
-
-.ranking {
-  color: var(--text-tertiary);
-}
-
-.teamCell {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
 
 .potTop {
   background: var(--top-tier-muted);

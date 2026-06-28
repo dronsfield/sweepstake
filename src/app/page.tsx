@@ -10,6 +10,7 @@ export default function Home() {
         width={140}
         height={200}
         className={styles.logo}
+        style={{ height: "auto" }}
         priority
       />
       <h1 className={styles.title}>

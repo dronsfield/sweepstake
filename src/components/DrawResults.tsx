@@ -7,10 +7,13 @@ import styles from "./DrawResults.module.css";
 export function DrawResults({
   participants,
   allNames,
+  eliminatedTeams = [],
 }: {
   participants: Participant[];
   allNames: string[];
+  eliminatedTeams?: string[];
 }) {
+  const eliminated = new Set(eliminatedTeams);
   const sorted = [...participants].sort((a, b) => {
     const rankDiff = a.topTierTeam.fifaRanking - b.topTierTeam.fifaRanking;
     if (rankDiff !== 0) return rankDiff;
@@ -32,17 +35,28 @@ export function DrawResults({
           </tr>
         </thead>
         <tbody>
-          {sorted.map((p) => (
+          {sorted.map((p) => {
+            const bothOut =
+              eliminated.has(p.topTierTeam.name) &&
+              eliminated.has(p.bottomTierTeam.name);
+            return (
             <tr key={p.name}>
-              <td className={styles.name}>{p.name}</td>
+              <td className={`${styles.name} ${bothOut ? styles.eliminated : ""}`}>{p.name}</td>
               <td>
-                <TeamBadge team={p.topTierTeam} />
+                <TeamBadge
+                  team={p.topTierTeam}
+                  eliminated={eliminated.has(p.topTierTeam.name)}
+                />
               </td>
               <td>
-                <TeamBadge team={p.bottomTierTeam} />
+                <TeamBadge
+                  team={p.bottomTierTeam}
+                  eliminated={eliminated.has(p.bottomTierTeam.name)}
+                />
               </td>
             </tr>
-          ))}
+            );
+          })}
           {waitingNames.map((name) => (
             <tr key={name} className={styles.waitingRow}>
               <td className={styles.name}>{name}</td>

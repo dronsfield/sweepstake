@@ -2,15 +2,19 @@
 
 import { WC26_TEAMS } from "@/lib/teams";
 import { Participant } from "@/lib/types";
+import { TeamBadge } from "./TeamBadge";
 import styles from "./AllTeams.module.css";
 
 export function AllTeams({
   participants,
   participantCount,
+  eliminatedTeams = [],
 }: {
   participants: Participant[];
   participantCount: number;
+  eliminatedTeams?: string[];
 }) {
+  const eliminated = new Set(eliminatedTeams);
   const topTeamOwners = new Map<string, string>();
   const bottomTeamOwners = new Map<string, string>();
 
@@ -42,14 +46,11 @@ export function AllTeams({
           </tr>
           {topTier.map((team) => {
             const owner = topTeamOwners.get(team.name);
+            const isEliminated = eliminated.has(team.name);
             return (
               <tr key={team.code}>
                 <td>
-                  <span className={styles.teamCell}>
-                    <span className={`fi fi-${team.code}`} />
-                    {team.name}
-                    <span className={styles.ranking}>#{team.fifaRanking}</span>
-                  </span>
+                  <TeamBadge team={team} eliminated={isEliminated} />
                 </td>
                 <td>
                   {owner ? (
@@ -70,14 +71,11 @@ export function AllTeams({
           </tr>
           {bottomTier.map((team) => {
             const owner = bottomTeamOwners.get(team.name);
+            const isEliminated = eliminated.has(team.name);
             return (
               <tr key={team.code}>
                 <td>
-                  <span className={styles.teamCell}>
-                    <span className={`fi fi-${team.code}`} />
-                    {team.name}
-                    <span className={styles.ranking}>#{team.fifaRanking}</span>
-                  </span>
+                  <TeamBadge team={team} eliminated={isEliminated} />
                 </td>
                 <td>
                   {owner ? (
@@ -101,11 +99,7 @@ export function AllTeams({
               {unassigned.map((team) => (
                 <tr key={team.code}>
                   <td>
-                    <span className={styles.teamCell}>
-                      <span className={`fi fi-${team.code}`} />
-                      {team.name}
-                      <span className={styles.ranking}>#{team.fifaRanking}</span>
-                    </span>
+                    <TeamBadge team={team} eliminated={eliminated.has(team.name)} />
                   </td>
                   <td>
                     <span className={styles.available}>—</span>

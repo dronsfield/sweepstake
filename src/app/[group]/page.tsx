@@ -5,6 +5,7 @@ import { DrawResults } from "@/components/DrawResults";
 import { AllTeams } from "@/components/AllTeams";
 import { getDb } from "@/lib/mongodb";
 import { getGroup } from "@/lib/groups";
+import { getWorldCupStatuses } from "@/lib/worldCupStatus";
 import { Participant } from "@/lib/types";
 import styles from "./page.module.css";
 
@@ -30,8 +31,16 @@ export default async function GroupPage({
 
   if (!group) notFound();
 
-  const participants = await getParticipants(groupSlug);
+  const [participants, wcStatus] = await Promise.all([
+    getParticipants(groupSlug),
+    getWorldCupStatuses(),
+  ]);
   const allDrawn = participants.length >= group.whitelist.length;
+  const eliminatedTeams = new Set(
+    wcStatus.teams
+      .filter((t) => !t.stillInTournament)
+      .map((t) => t.name),
+  );
 
   return (
     <div className={styles.container}>
@@ -42,6 +51,7 @@ export default async function GroupPage({
           width={140}
           height={200}
           className={styles.logo}
+          style={{ height: "auto" }}
           priority
         />
         <div className={styles.heroText}>
@@ -63,12 +73,14 @@ export default async function GroupPage({
         <DrawResults
           participants={participants}
           allNames={group.whitelist}
+          eliminatedTeams={[...eliminatedTeams]}
         />
 
         <h2 className={styles.teamsHeading}>All Teams</h2>
         <AllTeams
           participants={participants}
           participantCount={group.whitelist.length}
+          eliminatedTeams={[...eliminatedTeams]}
         />
       </main>
     </div>

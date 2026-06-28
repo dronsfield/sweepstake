@@ -7,4 +7,11 @@
 .ranking {
   color: var(--text-tertiary);
   font-size: 0.875rem;
+  margin-left: -0.25rem;
 }
+
+.eliminated {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
